@@ -101,6 +101,20 @@
     return currentInterfaceOrientation;
 }
 
+- (float)rotationForOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    if (interfaceOrientation == UIInterfaceOrientationPortrait) {
+        return 0;           // 0 degrees.
+    } else if (interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+        return M_PI * 0.5;  // 90 degrees.
+    } else if (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+        return M_PI;        // 180 degrees.
+    } else if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+        return M_PI * 1.5;  // 270 degrees.
+    } else {
+        return 0;
+    }
+}
+
 - (void)rotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
                             animated:(BOOL)animated {
     if(bReadyToRotate == NO) {
@@ -131,8 +145,8 @@
         bounds.size.height = screenSize.width;
     }
     
-    float rot1 = [self rotationForOrinetation:currentInterfaceOrientation];
-    float rot2 = [self rotationForOrinetation:interfaceOrientation];
+    float rot1 = [self rotationForOrientation:currentInterfaceOrientation];
+    float rot2 = [self rotationForOrientation:interfaceOrientation];
     float rot3 = rot2 - rot1;
     CGAffineTransform rotate = CGAffineTransformMakeRotation(rot3);
     rotate = CGAffineTransformConcat(rotate, self.glView.transform);
@@ -161,19 +175,6 @@
     [self.glView updateDimensions];
 }
 
-- (float)rotationForOrinetation:(UIInterfaceOrientation)interfaceOrientation {
-    if (interfaceOrientation == UIInterfaceOrientationPortrait) {
-        return 0;           // 0 degrees.
-    } else if (interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-        return M_PI * 0.5;  // 90 degrees.
-    } else if (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-        return M_PI;        // 180 degrees.
-    } else if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-        return M_PI * 1.5;  // 270 degrees.
-    } else {
-        return 0;
-    }
-}
 
 //-------------------------------------------------------------- orientation callbacks.
 // http://developer.apple.com/library/ios/#featuredarticles/ViewControllerPGforiPhoneOS/RespondingtoDeviceOrientationChanges/RespondingtoDeviceOrientationChanges.html
@@ -242,19 +243,19 @@
     switch (currentInterfaceOrientation) {
         case UIInterfaceOrientationPortrait:
 //            NSLog(@"ofxiPhoneViewController :: supportedInterfaceOrientations : UIInterfaceOrientationPortrait %i", currentInterfaceOrientation);
-            return UIInterfaceOrientationMaskPortrait;
+            return UIInterfaceOrientationPortrait;
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
 //            NSLog(@"ofxiPhoneViewController :: supportedInterfaceOrientations : UIInterfaceOrientationPortraitUpsideDown %i", currentInterfaceOrientation);
-            return UIInterfaceOrientationMaskPortraitUpsideDown;
+            return UIInterfaceOrientationPortraitUpsideDown;
             break;
         case UIInterfaceOrientationLandscapeLeft:
 //            NSLog(@"ofxiPhoneViewController :: supportedInterfaceOrientations : UIInterfaceOrientationMaskLandscapeLeft %i", currentInterfaceOrientation);
-            return UIInterfaceOrientationMaskLandscapeLeft;
+            return UIInterfaceOrientationLandscapeLeft;
             break;
         case UIInterfaceOrientationLandscapeRight:
 //            NSLog(@"ofxiPhoneViewController :: supportedInterfaceOrientations : UIInterfaceOrientationLandscapeRight %i", currentInterfaceOrientation);
-            return UIInterfaceOrientationMaskLandscapeRight;
+            return UIInterfaceOrientationLandscapeRight;
             break;
         default:
             break;
