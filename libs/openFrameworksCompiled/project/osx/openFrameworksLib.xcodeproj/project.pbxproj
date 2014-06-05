@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		22246D93176C9987008A8AF4 /* ofGLProgrammableRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22246D91176C9987008A8AF4 /* ofGLProgrammableRenderer.cpp */; };
 		22246D94176C9987008A8AF4 /* ofGLProgrammableRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 22246D92176C9987008A8AF4 /* ofGLProgrammableRenderer.h */; };
-		22246D97176C9AA0008A8AF4 /* ofAppGlutWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22246D95176C9AA0008A8AF4 /* ofAppGlutWindow.cpp */; };
 		22246D98176C9AA0008A8AF4 /* ofAppGlutWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 22246D96176C9AA0008A8AF4 /* ofAppGlutWindow.h */; };
 		22769591170D9DD200604FC3 /* ofMatrixStack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2276958F170D9DD200604FC3 /* ofMatrixStack.cpp */; };
 		22769592170D9DD200604FC3 /* ofMatrixStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 22769590170D9DD200604FC3 /* ofMatrixStack.h */; };
@@ -145,7 +144,6 @@
 		2E3D4F8A18A45475007DED10 /* ofRendererCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22A1C452170AFCB60079E473 /* ofRendererCollection.cpp */; };
 		2E3D4F8B18A45475007DED10 /* ofMatrixStack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2276958F170D9DD200604FC3 /* ofMatrixStack.cpp */; };
 		2E3D4F8C18A45475007DED10 /* ofGLProgrammableRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22246D91176C9987008A8AF4 /* ofGLProgrammableRenderer.cpp */; };
-		2E3D4F8D18A45475007DED10 /* ofAppGlutWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22246D95176C9AA0008A8AF4 /* ofAppGlutWindow.cpp */; };
 		2E3D4F8E18A45475007DED10 /* ofAppNoWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E495DF7B178896A900994238 /* ofAppNoWindow.cpp */; };
 		2E3D4F8F18A45475007DED10 /* ofAVFoundationPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E73DA809189F2573006C9E4E /* ofAVFoundationPlayer.mm */; };
 		2E3D4F9018A45475007DED10 /* ofXml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DEA30F1796F578000A9E90 /* ofXml.cpp */; };
@@ -176,6 +174,9 @@
 		772BDF74146928600030F0EE /* ofOpenALSoundPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 772BDF72146928600030F0EE /* ofOpenALSoundPlayer.h */; };
 		92C55F88132DA7DD00EC2631 /* ofPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92C55F86132DA7DD00EC2631 /* ofPath.cpp */; };
 		92C55F89132DA7DD00EC2631 /* ofPath.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C55F87132DA7DD00EC2631 /* ofPath.h */; };
+		B9E824D9193D7B5100A63DDA /* ofAppGlutWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = B9E824D8193D7B5100A63DDA /* ofAppGlutWindow.mm */; };
+		B9E824DA193D7B5100A63DDA /* ofAppGlutWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = B9E824D8193D7B5100A63DDA /* ofAppGlutWindow.mm */; };
+		B9E82542193D7CA400A63DDA /* openFrameworks64Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3D4FA518A45475007DED10 /* openFrameworks64Debug.a */; };
 		BBAB23BD13894D2600AA2426 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BC13894D2600AA2426 /* GLUT.framework */; };
 		DA48FE77131D85A6000062BC /* ofPolyline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DA48FE73131D85A6000062BC /* ofPolyline.cpp */; };
 		DA48FE78131D85A6000062BC /* ofPolyline.h in Headers */ = {isa = PBXBuildFile; fileRef = DA48FE74131D85A6000062BC /* ofPolyline.h */; };
@@ -306,7 +307,6 @@
 /* Begin PBXFileReference section */
 		22246D91176C9987008A8AF4 /* ofGLProgrammableRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofGLProgrammableRenderer.cpp; path = gl/ofGLProgrammableRenderer.cpp; sourceTree = "<group>"; };
 		22246D92176C9987008A8AF4 /* ofGLProgrammableRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofGLProgrammableRenderer.h; path = gl/ofGLProgrammableRenderer.h; sourceTree = "<group>"; };
-		22246D95176C9AA0008A8AF4 /* ofAppGlutWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofAppGlutWindow.cpp; sourceTree = "<group>"; };
 		22246D96176C9AA0008A8AF4 /* ofAppGlutWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofAppGlutWindow.h; sourceTree = "<group>"; };
 		2276958F170D9DD200604FC3 /* ofMatrixStack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofMatrixStack.cpp; sourceTree = "<group>"; };
 		22769590170D9DD200604FC3 /* ofMatrixStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofMatrixStack.h; sourceTree = "<group>"; };
@@ -327,6 +327,7 @@
 		772BDF72146928600030F0EE /* ofOpenALSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofOpenALSoundPlayer.h; sourceTree = "<group>"; };
 		92C55F86132DA7DD00EC2631 /* ofPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofPath.cpp; sourceTree = "<group>"; };
 		92C55F87132DA7DD00EC2631 /* ofPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofPath.h; sourceTree = "<group>"; };
+		B9E824D8193D7B5100A63DDA /* ofAppGlutWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofAppGlutWindow.mm; sourceTree = "<group>"; };
 		BBAB23BC13894D2600AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		DA48FE73131D85A6000062BC /* ofPolyline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofPolyline.cpp; sourceTree = "<group>"; };
 		DA48FE74131D85A6000062BC /* ofPolyline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofPolyline.h; sourceTree = "<group>"; };
@@ -497,6 +498,7 @@
 				2E3D4F9F18A45475007DED10 /* QuickTime.framework in Frameworks */,
 				2E3D4FA018A45475007DED10 /* QTKit.framework in Frameworks */,
 				2E3D4FA118A45475007DED10 /* GLUT.framework in Frameworks */,
+				B9E82542193D7CA400A63DDA /* openFrameworks64Debug.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,8 +603,8 @@
 			children = (
 				E495DF7B178896A900994238 /* ofAppNoWindow.cpp */,
 				E495DF7C178896A900994238 /* ofAppNoWindow.h */,
-				22246D95176C9AA0008A8AF4 /* ofAppGlutWindow.cpp */,
 				22246D96176C9AA0008A8AF4 /* ofAppGlutWindow.h */,
+				B9E824D8193D7B5100A63DDA /* ofAppGlutWindow.mm */,
 				22FAD01C17049373002A7EB3 /* ofAppGLFWWindow.cpp */,
 				22FAD01D17049373002A7EB3 /* ofAppGLFWWindow.h */,
 				E4B27AAC10CBE92A00536013 /* ofAppBaseWindow.h */,
@@ -1009,7 +1011,7 @@
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "openFrameworksLib" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1098,10 +1100,10 @@
 				2E3D4F8A18A45475007DED10 /* ofRendererCollection.cpp in Sources */,
 				2E3D4F8B18A45475007DED10 /* ofMatrixStack.cpp in Sources */,
 				2E3D4F8C18A45475007DED10 /* ofGLProgrammableRenderer.cpp in Sources */,
-				2E3D4F8D18A45475007DED10 /* ofAppGlutWindow.cpp in Sources */,
 				2E3D4F8E18A45475007DED10 /* ofAppNoWindow.cpp in Sources */,
 				2E3D4F8F18A45475007DED10 /* ofAVFoundationPlayer.mm in Sources */,
 				2E3D4F9018A45475007DED10 /* ofXml.cpp in Sources */,
+				B9E824DA193D7B5100A63DDA /* ofAppGlutWindow.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1170,10 +1172,10 @@
 				22A1C453170AFCB60079E473 /* ofRendererCollection.cpp in Sources */,
 				22769591170D9DD200604FC3 /* ofMatrixStack.cpp in Sources */,
 				22246D93176C9987008A8AF4 /* ofGLProgrammableRenderer.cpp in Sources */,
-				22246D97176C9AA0008A8AF4 /* ofAppGlutWindow.cpp in Sources */,
 				E495DF7D178896A900994238 /* ofAppNoWindow.cpp in Sources */,
 				E73DA80D189F2573006C9E4E /* ofAVFoundationPlayer.mm in Sources */,
 				27DEA3111796F578000A9E90 /* ofXml.cpp in Sources */,
+				B9E824D9193D7B5100A63DDA /* ofAppGlutWindow.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1220,7 +1222,7 @@
 					"$(LIB_FMODEX)",
 				);
 				PRODUCT_NAME = openFrameworks64Debug;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1266,7 +1268,7 @@
 					"$(LIB_FMODEX)",
 				);
 				PRODUCT_NAME = openFrameworks64;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -1310,7 +1312,7 @@
 					"$(LIB_FMODEX)",
 				);
 				PRODUCT_NAME = openFrameworksDebug;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1356,7 +1358,7 @@
 					"$(LIB_FMODEX)",
 				);
 				PRODUCT_NAME = openFrameworks;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
