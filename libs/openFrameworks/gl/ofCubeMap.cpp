@@ -686,7 +686,7 @@ void ofCubeMap::_createCubeMap(GLuint aSrcTexId) {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	
 	_configureCubeTextures( data->cubeMapId, true );
-	_equiRectToCubeMap( data->cubeMapId, aSrcTexId, data->settings.resolution, true );
+	_equiRectToCubeMap( data->cubeMapId, aSrcTexId, data->settings.resolution, isHdr() );
 	
 	glBindTexture(GL_TEXTURE_CUBE_MAP, data->cubeMapId);
 	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
