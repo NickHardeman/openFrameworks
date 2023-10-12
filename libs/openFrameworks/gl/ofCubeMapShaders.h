@@ -180,7 +180,11 @@ public:
 							 )";
 		rsource.fragShader = getGLSLHeader();
 		rsource.fragShader += R"(
-							 in vec3 oTexCoords;
+		
+							//set from OF
+							uniform vec4 globalColor;
+							
+							in vec3 oTexCoords;
 							 
 							uniform samplerCube uCubeMap;
 							uniform float uIsHDR;
@@ -220,7 +224,7 @@ public:
 									envColor = pow(envColor, vec3(1.0 / max(uExposure*2.2, 0.1) ) );
 								}
 		
-								 FRAGCOLOR = vec4(clamp(envColor, 0.0, 1.0), 1.0);
+								FRAGCOLOR = vec4(clamp(envColor*globalColor.rgb, 0.0, 1.0), 1.0);
 							 }
 							 
 							 )";
