@@ -11,7 +11,14 @@ function(of_addon ADDON_NAME)
     of_check_of_root_path()
     of_set_global_os_vars()
 
+    if("${ADDON_NAME}" STREQUAL "")
+        message(WARNING "of_addon name is EMPTY!! Not adding.")
+        return()
+    endif()
+
     set(ADDON_ROOT "${OF_ROOT_DIRECTORY}/addons/${ADDON_NAME}")
+
+    
 
     #TODO: If the addon does not exist, maybe we could use fetch content?
     if(EXISTS "${ADDON_ROOT}")
@@ -38,6 +45,13 @@ function(of_addon ADDON_NAME)
             if( EXISTS "${ADDON_ROOT}/src" )
                 of_get_subdirs_recursive("${ADDON_ROOT}/src" PARSED_INCLUDES_ABS)
                 list(APPEND PARSED_INCLUDES_ABS "${ADDON_ROOT}/src" )
+            endif()
+
+            # account for addons that aren't structured according to the libs they are meant to include
+            # ie. ofxXmlSettings and ofxVectorGraphics
+            if( EXISTS "${ADDON_ROOT}/libs" )
+                # of_get_subdirs_recursive("${ADDON_ROOT}/src" PARSED_INCLUDES_ABS)
+                list(APPEND PARSED_INCLUDES_ABS "${ADDON_ROOT}/libs" )
             endif()
 
             # message(VERBOSE "of_addon ${ADDON_NAME}: Going to parse addon includes via directories")
@@ -79,6 +93,7 @@ function(of_addon ADDON_NAME)
                 file(GLOB TMP_ADDON_LIBS_LIB_DIRECTORIES CONFIGURE_DEPENDS "${lib_dir}/*")
                 list(TRANSFORM TMP_ADDON_LIBS_LIB_DIRECTORIES REPLACE "\\\\" "/")   # CMake 3.16 OK
                 # don't consider listing directories named lib or license
+                # it would probably be fine, but adds so many extra paths to a project, ie. Xcode
                 list(FILTER TMP_ADDON_LIBS_LIB_DIRECTORIES EXCLUDE REGEX "(^|/)(lib|license)/?$")
                 foreach(lib_lib_dir ${TMP_ADDON_LIBS_LIB_DIRECTORIES})
                     if(IS_DIRECTORY "${lib_lib_dir}")
