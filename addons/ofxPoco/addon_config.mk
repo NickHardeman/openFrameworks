@@ -63,6 +63,7 @@ common:
 
 
 	ADDON_SOURCES_EXCLUDE = libs/poco/include/%
+	ADDON_SOURCES_EXCLUDE += libs/poco/lib/%
 
 linux64:
 	ADDON_LDFLAGS = -lPocoNetSSL
