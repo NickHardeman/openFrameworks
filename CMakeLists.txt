@@ -35,7 +35,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
     # Optionally set things like CMAKE_CXX_STANDARD, CMAKE_POSITION_INDEPENDENT_CODE here
     # specify the C++ standard
-    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD 23)
     set(CMAKE_CXX_STANDARD_REQUIRED True)
 
     # Let's ensure -std=c++xx instead of -std=g++xx
@@ -458,7 +458,6 @@ file(GLOB_RECURSE GL_SHADER_FILES CONFIGURE_DEPENDS
 
 target_sources(openFrameworks PRIVATE ${GL_SHADER_FILES})
 target_sources(openFrameworks PRIVATE ${OF_HEADER_AND_SOURCE_FILES})
-#TODO: Add in the gl/shaders to the TREE
 source_group(TREE "${OF_SOURCE_DIRECTORY}" FILES ${GL_SHADER_FILES})
 source_group(TREE "${OF_SOURCE_DIRECTORY}" FILES ${OF_HEADER_AND_SOURCE_FILES})
 # ---------------------------
