@@ -416,15 +416,6 @@ function(of_addon ADDON_NAME)
                     # set(OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${OF_PROJECT_NAME}>/Frameworks")
                     foreach(fw IN LISTS ADDON_FRAMEWORKS)
                         of_embed_framework(${OF_PROJECT_NAME} "${fw}")
-                    #     get_filename_component(fw_name "${fw}" NAME_WE)   # e.g. Syphon
-                    # #     # get_filename_component(fw_parent "${fw}" DIRECTORY) # .../lib/osx
-                    #     message(STATUS "POST BUILD FRAMEWORK: ${fw_name}")
-                    #     add_custom_command(TARGET ${OF_PROJECT_NAME} POST_BUILD
-                    #         COMMAND ${CMAKE_COMMAND} -E make_directory "${OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR}"
-                    #         COMMAND ${CMAKE_COMMAND} -E copy_directory
-                    #                 "${fw}"
-                    #                 "${OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR}/${fw_name}.framework"
-                    #         COMMENT "Embedding ${fw_name}.framework")
                     endforeach()
                 endif()
             endif()
@@ -434,6 +425,10 @@ function(of_addon ADDON_NAME)
             message(VERBOSE "--------------------------------------------")
             of_print_list(ADDON_FRAMEWORKS PREFIX "  📚 ADDON_FRAMEWORKS: " LEVEL VERBOSE)
 
+            # string(TOUPPER "${ADDON_NAME}" ADDON_NAME_UPPER)
+            # set( ADDON_NAME_DEFINE "OF_ADDON_${ADDON_NAME_UPPER}")
+            # # adding 
+            # target_compile_definitions(${OF_PROJECT_NAME} PUBLIC "${ADDON_NAME_DEFINE}")
 
             # working, but not great in ide since it's under the project folder and not one level above 
             target_include_directories(${OF_PROJECT_NAME} PRIVATE ${ADDON_INCLUDES})
@@ -445,35 +440,6 @@ function(of_addon ADDON_NAME)
                 PREFIX "addons"
                 FILES  ${TMP_HEADER_AND_SOURCE_FILES}
             )
-
-            # source_group(
-            #     TREE   "${ADDON_ROOT}"
-            #     PREFIX "addons/${ADDON_NAME}"
-            #     FILES  ${TMP_IN_HEADER_AND_SOURCES}
-            # )
-
-            # target_sources(${OF_PROJECT_NAME} PRIVATE ${TMP_OUT_HEADER_AND_SOURCES})
-            # source_group(
-            #     TREE   "${OF_ROOT_DIRECTORY}/addons"
-            #     #PREFIX "addons/${ADDON_NAME}"
-            #     PREFIX "addons"
-            #     FILES  ${TMP_OUT_HEADER_AND_SOURCES}
-            # )
-            #---- !IDE! ---------------------
-            
-
-
-
-            # target_include_directories(${OF_ADDONS} INTERFACE ${ADDON_INCLUDES})
-            # target_link_libraries(${OF_PROJECT_NAME} ${ADDON_LIBS} )
-            # #---- IDE ---------------------
-            # target_sources(${OF_ADDONS} INTERFACE ${TMP_HEADER_AND_SOURCE_FILES})
-            # source_group(
-            #     TREE   "${ADDON_ROOT}"
-            #     PREFIX "addons/${ADDON_NAME}"
-            #     FILES  ${TMP_HEADER_AND_SOURCE_FILES}
-            # )
-            # #---- !IDE! ---------------------
         endif()
 
         
@@ -483,22 +449,4 @@ function(of_addon ADDON_NAME)
 
 
     message(VERBOSE "--------------------------------------------" )
-
-    # if(EXISTS "${OF_ROOT_DIRECTORY}/addons/${ADDON_NAME}")
-    #     file(STRINGS "${OF_ROOT_DIRECTORY}/addons/${ADDON_NAME}/addon_config.mk" ADDON_MK_CONTENTS)
-    #     foreach(line IN LISTS ADDON_MK_CONTENTS)
-    #         if(line MATCHES "^([A-Za-z0-9_]+):")
-    #             set(current_section "${CMAKE_MATCH_1}")
-    #         elseif(line MATCHES "^[ \t]*ADDON_PKG_CONFIG_LIBRARIES[ \t]*=(.*)")
-    #             string(STRIP "${CMAKE_MATCH_1}" libs)
-    #             if(current_section STREQUAL "linux64")
-    #                 separate_arguments(libs)
-    #                 set(ADDON_PKG_CONFIG_LIBRARIES_LINUX64 ${libs})
-    #             endif()
-    #         endif()
-    #     endforeach()
-
-    #     message(STATUS "Linux64 libs: ${ADDON_PKG_CONFIG_LIBRARIES_LINUX64}")
-
-    # endif()
 endfunction()

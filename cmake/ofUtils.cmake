@@ -125,38 +125,6 @@ function(of_get_subdirs_recursive BASE_DIR OUT_DIRS)
 endfunction()
 
 
-# # of_exclude_paths_from_list(<BASE_DIR> <OUT_VAR> )
-# # - <A_SRC_FILES>: List of original files.
-# # - <A_EXCLUDE_FILES>: List of Files to exclude.
-# # - <OUT_VAR>: All the found directories.
-# # Example: of_exclude_paths_from_list("${ADDON_INCLUDES}" "${ADDON_INCLUDES_EXCLUDE}" TMP_DIR_FILES_FILTERED)
-# function(of_exclude_paths_from_list A_SRC_FILES A_EXCLUDE_FILES OUT_VAR )
-#     set(SOURCE_FILES_FILTERED "")
-#     foreach(src_file ${A_SRC_FILES})
-#         set(exclude_file FALSE)
-
-#         foreach(exclude_path ${A_EXCLUDE_FILES})
-#             # Check if src_file ends with exclude_path
-#             string(LENGTH "${src_file}" src_len)
-#             string(LENGTH "${exclude_path}" exclude_len)
-#             math(EXPR offset "${src_len} - ${exclude_len}")
-#             if(offset GREATER_EQUAL 0)
-#                 string(SUBSTRING "${src_file}" ${offset} ${exclude_len} tail)
-#                 if("${tail}" STREQUAL "${exclude_path}")
-#                     set(exclude_file TRUE)
-#                     break()
-#                 endif()
-#             endif()
-#         endforeach()
-
-#         if(NOT exclude_file)
-#             list(APPEND SOURCE_FILES_FILTERED "${src_file}")
-#         endif()
-#     endforeach()
-#     set(${OUT_VAR} ${SOURCE_FILES_FILTERED} PARENT_SCOPE)
-# endfunction()
-
-
 # of_get_static_libs_from_directory(<A_LIB_ROOT_DIR> <OUT_STATIC_LIBS> )
 # - <A_LIB_ROOT_DIR>: Library root directory.
 # - <OUT_STATIC_LIBS>: List of static libraries found.

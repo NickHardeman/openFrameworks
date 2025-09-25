@@ -41,9 +41,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
     # Optionally set things like CMAKE_CXX_STANDARD, CMAKE_POSITION_INDEPENDENT_CODE here
     # specify the C++ standard
-    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD 23)
     set(CMAKE_CXX_STANDARD_REQUIRED True)
-
     # Let's ensure -std=c++xx instead of -std=g++xx
     set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -76,29 +75,13 @@ include("${OF_CMAKE_DIRECTORY}/ofAddons.cmake")
 # add_subdirectory("${OF_ROOT_DIRECTORY}/libs/openFrameworksCompiled/project" "${OF_CMAKE_BUILD_DIRECTORY}" )
 add_subdirectory("${OF_ROOT_DIRECTORY}" "${OF_CMAKE_BUILD_DIRECTORY}" )
 
-#OUT_OS OUT_ARCH OUT_TAG OUT_IS_CROSS
-# of_detect_target(OF_OS OF_ARCH OF_OS_TAG OF_IS_CROSS_COMPILE)
+
 of_set_global_os_vars()
-# string(TOLOWER ${OF_OS_TAG} OF_OS_TAG_LOWER )
+
 message(VERBOSE "OF OF_OS NAME: ${OF_OS}")
 message(VERBOSE "OF_ARCH: ${OF_ARCH}")
 message(VERBOSE "OF_OS_TAG: ${OF_OS_TAG}")
 message(VERBOSE "OF_IS_CROSS_COMPILE: ${OF_IS_CROSS_COMPILE}")
-
-
-set(OF_PROJECT_FRAMEWORKS_TO_BUNDLE "" )
-
-
-# if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
-#     message(STATUS "Building for iOS")
-# elseif(CMAKE_SYSTEM_NAME STREQUAL "tvOS")
-#     message(STATUS "Building for tvOS")
-# elseif(CMAKE_SYSTEM_NAME STREQUAL "watchOS")
-#     message(STATUS "Building for watchOS")
-# elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#     message(STATUS "Building for macOS")
-# endif()
-
 
 
 # now lets add some options
@@ -117,34 +100,14 @@ endif()
 
 
 set(OF_PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
-file(GLOB_RECURSE OF_PROJECT_HEADER_FILES CONFIGURE_DEPENDS 
-    "${OF_PROJECT_SOURCE_DIR}/*.h"
-    "${OF_PROJECT_SOURCE_DIR}/*.hpp"
-    "${OF_PROJECT_SOURCE_DIR}/*.inl"
-)
 
-
-file(GLOB_RECURSE OF_PROJECT_SOURCE_FILES "${OF_PROJECT_SOURCE_DIR}/*.cpp")
-# add in some objective-c files 
-if( APPLE ) 
-    file(GLOB_RECURSE OF_PROJECT_SOURCE_MM_FILES  "${OF_PROJECT_SOURCE_DIR}/*.mm" "${OF_PROJECT_SOURCE_DIR}/*.m")
-    foreach(entry ${OF_PROJECT_SOURCE_MM_FILES})
-        list(APPEND OF_PROJECT_SOURCE_FILES "${entry}")
-    endforeach()
-endif()
+of_get_all_header_files( "${OF_PROJECT_SOURCE_DIR}" OF_PROJECT_HEADER_FILES )
+of_get_all_source_files( "${OF_PROJECT_SOURCE_DIR}" OF_PROJECT_SOURCE_FILES)
 
 set( OF_PROJECT_HEADER_AND_SOURCE_FILES ${OF_PROJECT_SOURCE_FILES} ${OF_PROJECT_HEADER_FILES} )
 
-# make_filespaths_relative("${CMAKE_SOURCE_DIR}" "${OF_SOURCE_FILES_ABS}" OF_SOURCE_FILES)
-# foreach(src_file ${OF_SOURCE_FILES_ABS})
-#     message(STATUS "Found source fileXXXX: ${src_file}")
-# endforeach()
-# set(OF_PROJECT_SOURCE_FILES ${OF_PROJECT_SOURCE_FILES_ABS} )
-
 of_get_all_subdirectories("${OF_PROJECT_SOURCE_DIR}" OF_PROJECT_INCLUDE_DIRECTORIES)
 list(APPEND OF_PROJECT_INCLUDE_DIRECTORIES "${OF_PROJECT_SOURCE_DIR}" )
-
-# file(GLOB_RECURSE OF_PROJECT_HEADERS_FILES_ABS "${OF_PROJECT_SOURCE_DIR}/*.h" "${OF_PROJECT_SOURCE_DIR}/*.hpp")
 
 
 if(APPLE)
