@@ -1,7 +1,11 @@
 #https://github.com/peterkolski/ofxCMake/blob/master/modules/configApple.cmake 
 
 
-# add_prefix_inplace(<varName> <prefix>)
+# of_add_prefix_to_list(<varName> <prefix>)
+# - <LIST_VAR>: List of items 
+# - <PREFIX>: Prefix to prepend to each item.
+# - <OUT_VAR>: Variable to write the results into
+# Example: of_add_prefix_to_list("${OF_HEADER_FILES}" "${OF_SOURCE_DIRECTORY}/" OF_HEADER_FILES)
 function(of_add_prefix_to_list LIST_VAR PREFIX OUT_VAR)
     set(_out "")
     set(_tlist ${LIST_VAR})
@@ -11,10 +15,11 @@ function(of_add_prefix_to_list LIST_VAR PREFIX OUT_VAR)
     set(${OUT_VAR} "${_out}" PARENT_SCOPE)
 endfunction()
 
-# make_absolute(<base> <outVar> <listVar>)
-# - <base>: absolute base directory
-# - <listVar>: variable name containing the list of relative paths
-# - <outVar>: variable to write the results into
+## PATHS ######################################################################
+# of_make_absolute(<base> <outVar> <listVar>)
+# - <BASE_DIR>: Absolute base directory
+# - <LIST_VAR>: Variable name containing the list of relative paths
+# - <OUT_VAR>: Variable to write the results into
 function(of_make_absolute BASE_DIR LIST_VAR OUT_VAR)
     set(_out "")
     set(_tlist ${LIST_VAR})
@@ -43,6 +48,11 @@ function(of_get_all_subdirectories BASE_DIR OUT_VAR)
     set(${OUT_VAR} "${result}" PARENT_SCOPE)
 endfunction()
 
+# of_make_filespaths_relative(<REL_PATH> <IN_VARS> <OUT_VAR>)
+# - <REL_PATH>: Absolute base directory to make IN_VARS relative to.
+# - <IN_VARS>: Variable name containing the list of relative paths
+# - <OUT_VAR>: Variable to write the results into
+# Example: of_make_filespaths_relative("${CMAKE_BINARY_DIR}" "${OF_HEADER_AND_SOURCE_FILES}"  OF_HEADER_FILES_REL)
 function(of_make_filespaths_relative REL_PATH IN_VARS OUT_VAR )
     set(TMP_SOURCE_FILES_RELATIVE "")
 
@@ -55,7 +65,10 @@ function(of_make_filespaths_relative REL_PATH IN_VARS OUT_VAR )
     set(${OUT_VAR} "${TMP_SOURCE_FILES_RELATIVE}" PARENT_SCOPE)
 endfunction()
 
-
+# of_get_all_source_files(<BASE_DIR> <OUT_VAR> )
+# - <BASE_DIR>: Absolute base directory to begin recursive search for .cpp and .c files and if Apple also .mm and .m.
+# - <OUT_VAR>: All the source file paths found as a list.
+# Example: of_get_all_source_files("${OF_PROJECT_DIRECTORY}/src" PROJECT_SRC_FILES )
 function(of_get_all_source_files BASE_DIR OUT_VAR)
     # source files -------------------------------------------
     message(VERBOSE "of_get_all_source_files : Getting source files from ${BASE_DIR}")
@@ -75,6 +88,10 @@ function(of_get_all_source_files BASE_DIR OUT_VAR)
     set(${OUT_VAR} "${TMP_SOURCE_FILES}" PARENT_SCOPE)
 endfunction()
 
+# of_get_all_header_files(<BASE_DIR> <OUT_VAR> )
+# - <BASE_DIR>: Absolute base directory to begin recursive search for .h, .hpp and .inl files.
+# - <OUT_VAR>: All the header file paths found as a list.
+# Example: of_get_all_header_files("${OF_PROJECT_DIRECTORY}/src" PROJECT_HEADER_FILES )
 function(of_get_all_header_files BASE_DIR OUT_VAR )
     # message(VERBOSE "of_get_all_header_files : Getting Header files from ${BASE_DIR}")
     file(GLOB_RECURSE TMP_HEADER_FILES CONFIGURE_DEPENDS 
@@ -86,21 +103,20 @@ function(of_get_all_header_files BASE_DIR OUT_VAR )
 endfunction()
 
 
-# get_subdirs(<root> <outVar>)
-function(of_get_subdirs_recursive A_ROOT_DIR OUT_DIRS)
-    file(GLOB_RECURSE _entries CONFIGURE_DEPENDS LIST_DIRECTORIES true "${A_ROOT_DIR}/*")
+# of_get_subdirs_recursive(<BASE_DIR> <OUT_VAR> )
+# - <BASE_DIR>: Absolute base directory to begin recursive search sub directories.
+# - <OUT_DIRS>: All the found directories.
+# Helpful for grabbing include directories.
+# Example: of_get_subdirs_recursive("${OF_PROJECT_DIRECTORY}/src" PROJECT_SRC_INCLUDES)
+function(of_get_subdirs_recursive BASE_DIR OUT_DIRS)
+    file(GLOB_RECURSE _entries CONFIGURE_DEPENDS LIST_DIRECTORIES true "${BASE_DIR}/*")
     set(_dirs "")
     foreach(p IN LISTS _entries)
         if(IS_DIRECTORY "${p}")
-            file(RELATIVE_PATH rel "${A_ROOT_DIR}" "${p}")
+            file(RELATIVE_PATH rel "${BASE_DIR}" "${p}")
             if(NOT p STREQUAL "")          # skip the root itself
                 list(APPEND _dirs "${p}")
             endif()
-            # Make relative path
-            # file(RELATIVE_PATH rel "${A_ROOT_DIR}" "${p}")
-            # if(NOT rel STREQUAL "")          # skip the root itself
-            #     list(APPEND _dirs "${rel}")
-            # endif()
         endif()
     endforeach()
     list(REMOVE_DUPLICATES _dirs)
@@ -109,33 +125,44 @@ function(of_get_subdirs_recursive A_ROOT_DIR OUT_DIRS)
 endfunction()
 
 
-function(of_exclude_paths_from_list A_SRC_FILES A_EXCLUDE_FILES OUT_VAR )
-    set(SOURCE_FILES_FILTERED "")
-    foreach(src_file ${A_SRC_FILES})
-        set(exclude_file FALSE)
+# # of_exclude_paths_from_list(<BASE_DIR> <OUT_VAR> )
+# # - <A_SRC_FILES>: List of original files.
+# # - <A_EXCLUDE_FILES>: List of Files to exclude.
+# # - <OUT_VAR>: All the found directories.
+# # Example: of_exclude_paths_from_list("${ADDON_INCLUDES}" "${ADDON_INCLUDES_EXCLUDE}" TMP_DIR_FILES_FILTERED)
+# function(of_exclude_paths_from_list A_SRC_FILES A_EXCLUDE_FILES OUT_VAR )
+#     set(SOURCE_FILES_FILTERED "")
+#     foreach(src_file ${A_SRC_FILES})
+#         set(exclude_file FALSE)
 
-        foreach(exclude_path ${A_EXCLUDE_FILES})
-            # Check if src_file ends with exclude_path
-            string(LENGTH "${src_file}" src_len)
-            string(LENGTH "${exclude_path}" exclude_len)
-            math(EXPR offset "${src_len} - ${exclude_len}")
-            if(offset GREATER_EQUAL 0)
-                string(SUBSTRING "${src_file}" ${offset} ${exclude_len} tail)
-                if("${tail}" STREQUAL "${exclude_path}")
-                    set(exclude_file TRUE)
-                    break()
-                endif()
-            endif()
-        endforeach()
+#         foreach(exclude_path ${A_EXCLUDE_FILES})
+#             # Check if src_file ends with exclude_path
+#             string(LENGTH "${src_file}" src_len)
+#             string(LENGTH "${exclude_path}" exclude_len)
+#             math(EXPR offset "${src_len} - ${exclude_len}")
+#             if(offset GREATER_EQUAL 0)
+#                 string(SUBSTRING "${src_file}" ${offset} ${exclude_len} tail)
+#                 if("${tail}" STREQUAL "${exclude_path}")
+#                     set(exclude_file TRUE)
+#                     break()
+#                 endif()
+#             endif()
+#         endforeach()
 
-        if(NOT exclude_file)
-            list(APPEND SOURCE_FILES_FILTERED "${src_file}")
-        endif()
-    endforeach()
-    set(${OUT_VAR} ${SOURCE_FILES_FILTERED} PARENT_SCOPE)
-endfunction()
+#         if(NOT exclude_file)
+#             list(APPEND SOURCE_FILES_FILTERED "${src_file}")
+#         endif()
+#     endforeach()
+#     set(${OUT_VAR} ${SOURCE_FILES_FILTERED} PARENT_SCOPE)
+# endfunction()
 
 
+# of_get_static_libs_from_directory(<A_LIB_ROOT_DIR> <OUT_STATIC_LIBS> )
+# - <A_LIB_ROOT_DIR>: Library root directory.
+# - <OUT_STATIC_LIBS>: List of static libraries found.
+# Description: Look for static libraries based on the root directory based on the OF_LIB_DIR_NAME
+# Will attempt to search through xcframework's and add each slice found.
+# Example: of_get_static_libs_from_directory(${OF_ROOT_DIRECTORY}/libs TMP_PARSED_LIBS )
 function(of_get_static_libs_from_directory A_LIB_ROOT_DIR OUT_STATIC_LIBS )
     of_set_global_os_vars()
     set(FOUND_STATIC_LIBS "")
@@ -175,6 +202,21 @@ function(of_get_static_libs_from_directory A_LIB_ROOT_DIR OUT_STATIC_LIBS )
     endif()
     set(${OUT_STATIC_LIBS} "${FOUND_STATIC_LIBS}" PARENT_SCOPE)
 endfunction()
+
+
+
+# of_add_library_from_directory(<A_LIB_ROOT_DIR> <OUT_STATIC_LIBS> )
+# - <A_LIB_ROOT_DIR>: Library root directory.
+# - <OUT_LIBS_ADDED>: List of static libraries found.
+# Description: Look for static libraries based on the root directory based on the OF_LIB_DIR_NAME.
+# Creates INTERFACE objects for each library found.
+# Will attempt to search through xcframework's and add each slice found.
+# foreach(lib_dir ${OF_LIBS_DIRECTORIES})
+#     of_add_library_from_directory(${lib_dir} OUT_LIBS_ADDED)
+#     list(APPEND OF_CORE_LIBS ${OUT_LIBS_ADDED} )
+# endforeach()
+# now link with the libraries found.
+# target_link_libraries( openFrameworks PUBLIC ${OF_CORE_LIBS})
 
 function(of_add_library_from_directory A_LIB_ROOT_DIR OUT_LIBS_ADDED )
     of_set_global_os_vars()
@@ -265,6 +307,7 @@ endfunction()
 
 
 
+## PARSE .mk FILES ##############################################################
 
 # read_mk_section_vars(<mkfile> <section> <VAR> [<VAR>...])
 # - <section> is e.g. "linux64" (the line "linux64:")
@@ -320,6 +363,7 @@ function(read_mk_section_vars MKFILE SECTION)
         else()
           separate_arguments(_val)          # split into list
           set("__acc_${var}" "${_val}")     # replace
+            # list(APPEND __acc_${var} "${_val}")
         endif()
         continue()
       endif()
@@ -332,6 +376,7 @@ function(read_mk_section_vars MKFILE SECTION)
           separate_arguments(_val)
           set("__tmp_${var}" "${__acc_${var}};${_val}")
           set("__acc_${var}" "${__tmp_${var}}")
+            # list(APPEND __acc_${var} "${_val}")
         endif()
         continue()
       endif()
@@ -398,12 +443,13 @@ endfunction()
 
 
 
-# print_list(<var> [PREFIX <str>] [LEVEL <msg-level>] [NUMBERED])
+# of_print_list(<var> [PREFIX <str>] [LEVEL <msg-level>] [NUMBERED])
 #   <var>   : name of the CMake list variable (not its contents)
 #   PREFIX  : string to put in front of each item (default: " - ")
 #   LEVEL   : message() level (STATUS/VERBOSE/DEBUG/TRACE/NOTICE/WARNING/...)
 #             default: STATUS
 #   NUMBERED: if present, prints "1: item", "2: item", ...
+# Example: of_print_list(ADDON_SOURCES_EXCLUDE PREFIX "  • ADDON_SOURCES_EXCLUDE: " LEVEL VERBOSE)
 function(of_print_list VAR)
     set(options NUMBERED)
     set(oneValueArgs PREFIX LEVEL)
@@ -433,6 +479,99 @@ function(of_print_list VAR)
         endforeach()
     endif()
 endfunction()
+
+
+# of_partition_paths_by_parent(<parent_dir> <input_list>
+#                           <out_inside_var> <out_outside_var>)
+#
+# - <parent_dir>: the directory to test against
+# - <input_list>: a CMake list of paths (relative or absolute)
+# - <out_inside_var>: will receive items that are children of <parent_dir>
+# - <out_outside_var>: will receive items that are NOT children of <parent_dir>
+function(of_partition_paths_by_parent PARENT_DIR INPUT_LIST OUT_INSIDE OUT_OUTSIDE)
+    # Normalize parent: absolute + resolve .., . and symlinks
+    get_filename_component(_parent_abs "${PARENT_DIR}" ABSOLUTE)
+    get_filename_component(_parent_abs "${_parent_abs}" REALPATH)
+
+    # Escape regex special characters in the parent path
+    string(REGEX REPLACE "([][+.*^$(){}|\\])" "\\\\\\1" _parent_re "${_parent_abs}")
+
+    set(_inside)
+    set(_outside)
+
+    foreach(_p IN LISTS INPUT_LIST)
+        # Normalize child path
+        get_filename_component(_abs "${_p}" ABSOLUTE)
+        get_filename_component(_abs "${_abs}" REALPATH)
+
+        # Boundary-safe match: must be exactly the parent or under it
+        if("${_abs}" MATCHES "^${_parent_re}(/|$)")
+            list(APPEND _inside "${_p}")   # keep original spelling
+        else()
+            list(APPEND _outside "${_p}")
+        endif()
+    endforeach()
+
+    set(${OUT_INSIDE}  "${_inside}"  PARENT_SCOPE)
+    set(${OUT_OUTSIDE} "${_outside}" PARENT_SCOPE)
+endfunction()
+
+
+#### MACOS FRAMEWORKS #############################
+function(of_link_framework A_TARGET A_FRAMEWORK_PATH )
+    get_filename_component(fw_name   "${A_FRAMEWORK_PATH}" NAME_WE)   # e.g. Syphon
+    get_filename_component(fw_parent "${A_FRAMEWORK_PATH}" DIRECTORY) # .../lib/osx
+
+    message(VERBOSE "of_link_framework: ${fw_name}; directory: ${fw_parent}")
+
+    # Make headers visible: #import <Syphon/Syphon.h>
+    target_compile_options(${A_TARGET} PRIVATE "-F${fw_parent}")
+    # Link flags
+    target_link_options(${A_TARGET}   PRIVATE "-F${fw_parent}")
+    target_link_options(${A_TARGET}   PRIVATE "-framework" "${fw_name}")
+
+    if(CMAKE_GENERATOR STREQUAL "Xcode")
+        # string(JOIN " " _fsp ${F_DIRS})
+        set_property(TARGET ${A_TARGET}
+            PROPERTY XCODE_ATTRIBUTE_FRAMEWORK_SEARCH_PATHS "${fw_parent}")
+    endif()
+
+endfunction()
+
+function(of_embed_framework A_TARGET A_FRAMEWORK_PATH)
+    set(_bundle_frameworks_dir "$<TARGET_FILE_DIR:${A_TARGET}>/../Frameworks")
+    get_filename_component(fw_name "${A_FRAMEWORK_PATH}" NAME_WE)   # e.g. Syphon
+
+    message(VERBOSE "of_embed_framework: ${fw_name} at ${_bundle_frameworks_dir}")
+
+    # set(OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${A_TARGET}>/Frameworks")
+    # "$<TARGET_FILE_DIR:${A_TARGET}>/../Frameworks"
+    add_custom_command(TARGET ${A_TARGET} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${_bundle_frameworks_dir}"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                                    "${A_FRAMEWORK_PATH}"
+                                    "${_bundle_frameworks_dir}/${fw_name}.framework"
+        COMMENT "Embedding ${fw_name}.framework")
+endfunction()
+
+# link_and_embed_frameworks(<target> <framework_dir> [<framework_dir>...])
+# - <framework_dir> Absolute Path to the framework to link and copy to bundle, ie. OF/addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework
+function(of_link_and_embed_framework A_TARGET A_FRAMEWORK_PATH)
+    of_link_framework(${A_TARGET} "${A_FRAMEWORK_PATH}" )
+    # Embed into .app
+    of_embed_framework(${A_TARGET} "${A_FRAMEWORK_PATH}")
+endfunction()
+
+
+# link_and_embed_frameworks(<target> <framework_dir> [<framework_dir>...])
+# - <framework_dir> Absolute Path to the framework to link and copy to bundle, ie. OF/addons/ofxSyphon/libs/Syphon/lib/osx/Syphon.framework
+function(of_link_and_embed_frameworks A_TARGET)
+    foreach(fw IN LISTS ARGN)
+        of_link_and_embed_framework(${A_TARGET} "${fw}")
+    endforeach()
+endfunction()
+
+
 
 
 

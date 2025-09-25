@@ -1,7 +1,11 @@
-#https://github.com/peterkolski/ofxCMake/blob/master/modules/configApple.cmake 
+# References
+# https://cliutils.gitlab.io/modern-cmake/chapters/basics.html
+# https://www.studyplan.dev/cmake/cpp-build-process
+# https://github.com/HerrNamenlos123/openFrameworks/blob/master/cmake/utils.cmake
+# https://github.com/peterkolski/ofxCMake/blob/master/modules/configApple.cmake 
 
 # OPENFRAMEWORKS CMAKE 
-cmake_minimum_required(VERSION 3.16...4.0)
+cmake_minimum_required(VERSION 3.18...4.0)
 
 set(OF_VERSION "12.1")
 
@@ -432,6 +436,7 @@ if( APPLE ) # Apple is a Unix, too. So dont ask only first UNIX
 endif()
 
 file(GLOB OF_LIBS_DIRECTORIES CONFIGURE_DEPENDS "${OF_LIBS_DIRECTORY}/*")
+# loop through each of the libs / folders and try to extract static libs
 foreach(lib_dir ${OF_LIBS_DIRECTORIES})
     of_add_library_from_directory(${lib_dir} OUT_LIBS_ADDED)
     list(APPEND OF_CORE_LIBS ${OUT_LIBS_ADDED} )

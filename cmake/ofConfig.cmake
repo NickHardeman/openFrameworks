@@ -134,6 +134,15 @@ macro(of_set_global_os_vars)
             set(OF_OS_MACOS ON)
         endif()
     endif()
+
+    if(APPLE)
+        if(NOT DEFINED OF_IS_XCODE)
+            set(OF_IS_XCODE OFF)
+            if(CMAKE_GENERATOR STREQUAL "Xcode")
+                set(OF_IS_XCODE ON)
+            endif()
+        endif()
+    endif()
 endmacro()
 
 # check if OS has been set

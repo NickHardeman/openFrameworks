@@ -2,7 +2,7 @@
 # make sure to set OF_FRAMEWORKS 
 set(OF_CORE_FRAMEWORKS 
     "-framework Accelerate"
-    "-framework AGL"
+    # "-framework AGL"
     "-framework AppKit"
     "-framework ApplicationServices"
     "-framework AudioToolbox"
