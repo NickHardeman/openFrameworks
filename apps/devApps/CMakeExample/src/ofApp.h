@@ -8,6 +8,11 @@
 #include "ofxNetwork.h"
 #include "ofxOsc.h"
 #include "ofxXmlPoco.h"
+#include "ofxSvg.h"
+#include "ofxThreadedImageLoader.h"
+#include "ofxVectorGraphics.h"
+#include "ofxXmlSettings.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -77,4 +82,8 @@ public:
 	ofxOscReceiver clientReceiver; // OSC receiver
 	
 	ofxXmlPoco pocoXml;
+	ofxSvg svg;
+	ofxThreadedImageLoader threadedLoader;
+	ofxVectorGraphics vectorGraphics;
+	ofxXmlSettings xmlSettings;
 };

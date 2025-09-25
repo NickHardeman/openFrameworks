@@ -1,10 +1,5 @@
-# cmake_minimum_required(VERSION 3.16...4.0)
 
-# References
-# https://cliutils.gitlab.io/modern-cmake/chapters/basics.html
-# https://github.com/HerrNamenlos123/openFrameworks/blob/master/cmake/utils.cmake
-
-cmake_minimum_required(VERSION 3.16...4.0)
+cmake_minimum_required(VERSION 3.18...4.0)
 
 # cmake -S . -B build -G Xcode --log-level=VERBOSE
 # cmake --build build --parallel
@@ -90,6 +85,8 @@ message(VERBOSE "OF_ARCH: ${OF_ARCH}")
 message(VERBOSE "OF_OS_TAG: ${OF_OS_TAG}")
 message(VERBOSE "OF_IS_CROSS_COMPILE: ${OF_IS_CROSS_COMPILE}")
 
+
+set(OF_PROJECT_FRAMEWORKS_TO_BUNDLE "" )
 
 
 # if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
@@ -198,6 +195,13 @@ if( APPLE )
     #     XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bin"
     # )
 
+    set_target_properties(${OF_PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE YES
+        BUILD_WITH_INSTALL_RPATH YES
+        INSTALL_RPATH "@executable_path/../Frameworks"
+    )
+
+
     #Suppress ZERO_CHECK (auto-regeneration) target:
     set(CMAKE_SUPPRESS_REGENERATION ON)
 
@@ -206,14 +210,12 @@ if( APPLE )
     set(APP_ICON_DEBUG   "icon-debug.icns")
     # set(OF_APP_ICON_NAME "icon$<IF:$<CONFIG:Debug>,-debug,>.icns")
 
+     # Put the file into MyApp.app/Contents/Resources
     set_source_files_properties("${OF_APP_ICON_PATH}${APP_ICON_RELEASE}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     set_source_files_properties("${OF_APP_ICON_PATH}${APP_ICON_DEBUG}"   PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     target_sources(${OF_PROJECT_NAME} PRIVATE "${OF_APP_ICON_PATH}${APP_ICON_RELEASE}" "${OF_APP_ICON_PATH}${APP_ICON_DEBUG}")
 
     # set(OF_APP_ICON_PATH "${OF_ROOT_DIRECTORY}/libs/openFrameworksCompiled/project/${OF_LIB_DIR_NAME}/${OF_APP_ICON_NAME}")
-
-    # Put the file into MyApp.app/Contents/Resources
-    # set_source_files_properties(${OF_APP_ICON_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
     # Add it as a source of the bundle target
     # target_sources(${OF_PROJECT_NAME} PRIVATE ${OF_APP_ICON_PATH})
@@ -223,6 +225,12 @@ if( APPLE )
     # set_target_properties(${OF_PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "icon.icns")
 
     # TODO: Check to see if there is an info.plist file existing 
+    set(OF_PROJECT_PLIST_PATH "${OF_PROJECT_DIRECTORY}/openFrameworks-Info.plist")
+    if(NOT EXISTS ${OF_PLIST_PATH} )
+        # Copy a config file into the build directory
+        file(COPY "${OF_ROOT_DIRECTORY}/libs/openFrameworksCompiled/project/${OF_LIB_DIR_NAME}/openFrameworks-Info.plist" DESTINATION ${OF_PROJECT_DIRECTORY}/)
+    endif()
+
     # TODO: Generate a plist if it is not present 
     # this can be done in the ofConfigMacOS.cmake
     set_target_properties(${OF_PROJECT_NAME} PROPERTIES
@@ -232,7 +240,9 @@ if( APPLE )
         MACOSX_BUNDLE_BUNDLE_VERSION   "1.0"
         #MACOSX_BUNDLE_ICON_NAME     "$<IF:$<CONFIG:Debug>,icon-debug.icns,icon.icns>"
         # MACOSX_BUNDLE_ICON_NAME     "$<IF:$<CONFIG:Debug>,icon-debug.icns,icon.icns>"
-        MACOSX_BUNDLE_INFO_PLIST    "${OF_PROJECT_DIRECTORY}/openFrameworks-Info.plist"
+        MACOSX_BUNDLE_INFO_PLIST    "${OF_PROJECT_PLIST_PATH}"
+        # https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#code-signing
+        # CMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM 
         # XCODE_ATTRIBUTE_ICON_NAME "$<IF:$<CONFIG:Debug>,of-debug.icns,icon.icns>"
         # XCODE_ATTRIBUTE_GENERATE_INFOPLIST_FILE NO
     )
@@ -318,7 +328,7 @@ if(EXISTS "${OF_PROJECT_DIRECTORY}/addons.make")
     file(STRINGS "${OF_PROJECT_DIRECTORY}/addons.make" TMP_ADDON_NAMES) 
     foreach(TMP_ADDON_TO_INCLUDE IN LISTS TMP_ADDON_NAMES)
         if(NOT "${TMP_ADDON_TO_INCLUDE}" STREQUAL "")
-            message(STATUS "ADDING addon ${TMP_ADDON_TO_INCLUDE}")
+            message(VERBOSE "ADDING addon ${TMP_ADDON_TO_INCLUDE}")
             of_addon("${TMP_ADDON_TO_INCLUDE}")
         endif()
     endforeach()
@@ -343,11 +353,20 @@ add_custom_command(TARGET ${OF_PROJECT_NAME} POST_BUILD
 
 
 if(APPLE)
+    # set(APP_FRAMEWORKS_DIR "$<TARGET_FILE_DIR:${TARGET}>/../Frameworks")
+    # set(OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${OF_PROJECT_NAME}>/Frameworks")
+    # add_custom_command(TARGET ${OF_PROJECT_NAME} POST_BUILD
+    #     COMMAND ${CMAKE_COMMAND} -E make_directory "${OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR}"
+    #     COMMAND ${CMAKE_COMMAND} -E copy_directory
+    #             "$<SHELL_PATH:${SYPHON_FW_DIR}>"
+    #             "$<SHELL_PATH:${OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR}>/Syphon.framework"
+    #     COMMENT "Embedding Syphon.framework into ${OF_PROJECT_APP_BUNDLE_FRAMEWORKS_DIR}"
+    # )
+
     if(OF_BUNDLE_DATA_FOLDER)
         # rsync -avz --delete --exclude='.DS_Store' "${SRCROOT}/bin/data/" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/data/"
         add_custom_command(TARGET ${OF_PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E echo 
-                "--------------------------------------------------" 
+            COMMENT "--------------------------------------------------" 
             COMMAND ${CMAKE_COMMAND} -E echo 
                 "Bundling resources to $<TARGET_BUNDLE_CONTENT_DIR:${OF_PROJECT_NAME}>/Resources" 
             COMMAND ${CMAKE_COMMAND} -E make_directory
@@ -355,8 +374,9 @@ if(APPLE)
             COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
                 "${OF_PROJECT_DIRECTORY}/bin/data/"
                 "$<TARGET_BUNDLE_CONTENT_DIR:${OF_PROJECT_NAME}>/Resources/data"
-            COMMAND ${CMAKE_COMMAND} -E echo 
-                "--------------------------------------------------" 
+            COMMENT "--------------------------------------------------" 
+            # COMMAND ${CMAKE_COMMAND} -E echo 
+                # "--------------------------------------------------" 
         )
     endif()
 endif()

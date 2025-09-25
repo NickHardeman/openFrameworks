@@ -1,7 +1,12 @@
 ofxOpenCv
-ofxAssimp
 ofxGui
 ofxKinect
 ofxNetwork
 ofxOsc
 ofxPoco
+ofxSvg
+ofxThreadedImageLoader
+ofxXmlSettings
+ofxVectorGraphics
+ofxAssimp
+ofxSyphon
